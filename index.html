@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placar de Futebol Dinâmico</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="placar-container">
+        <h1 class="titulo">CAMPEONATO BRASILEIRO SÉRIE A</h1>
+
+        <div id="placar">
+            <div class="time" id="time-casa">
+                <span class="nome-time">TIME DA CASA</span>
+                <span class="gols" id="gols-casa">0</span>
+            </div>
+
+            <div class="divisor">
+                <span class="tempo" id="tempo-jogo">INTERVALO</span>
+            </div>
+            
+            <div class="time" id="time-visitante">
+                <span class="gols" id="gols-visitante">0</span>
+                <span class="nome-time">VISITANTE</span>
+            </div>
+        </div>
+        
+        <p class="atualizacao" id="ultima-atualizacao">Última atualização: --:--:--</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
