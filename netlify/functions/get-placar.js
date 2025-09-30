@@ -1,33 +1,46 @@
 // Arquivo: netlify/functions/get-placar.js
 
-// O Netlify expõe variáveis de ambiente (como a API key) via process.env
+// A chave de API secreta é obtida de forma segura das Variáveis de Ambiente do Netlify.
 const API_KEY = process.env.API_KEY_FUTEBOL; 
-const API_URL = 'https://free-livescore-api.p.rapidapi.com/livescore-get-search?sportname=soccer&search=romania'; // Ex: https://api.exemplo.com/v1/scores?league=brasileirao
 
-// A função 'handler' é o que o Netlify executa quando a URL da função é acessada
+// O Host da RapidAPI é essencial para a autenticação.
+// (Este host é extraído do URL que você forneceu)
+const RAPIDAPI_HOST = 'free-api-live-football-data.p.rapidapi.com'; 
+
+// URL pura da API que retorna a lista de jogadores (ajuste se for o endpoint de placar)
+const API_URL = 'https://free-api-live-football-data.p.rapidapi.com/football-players-search?search=m'; 
+
+// A função 'handler' é o que o Netlify executa
 exports.handler = async (event, context) => {
   try {
-    // Adiciona a chave de API na URL ou no header (depende da sua API)
-    const urlComChave = `${API_URL}&api_key=${API_KEY}`;
-    
-    // Faz a requisição para a API de Futebol
-    const resposta = await fetch(urlComChave);
-    
-    if (!resposta.ok) {
-      // Se a API externa falhar, retorna um erro amigável
+    // 1. FAZ A REQUISIÇÃO USANDO HEADERS (O MÉTODO CORRETO PARA RAPIDAPI)
+    const resposta = await fetch(API_URL, {
+        method: 'GET', 
+        headers: {
+            // As chaves x-rapidapi-key e x-rapidapi-host são padrão da plataforma RapidAPI
+            'x-rapidapi-key': API_KEY,      
+            'x-rapidapi-host': RAPIDAPI_HOST 
+        }
+    });
+
+    // Se o status HTTP não for 200 (OK), a autenticação ou a API falhou
+    if (!resposta.ok) { 
+      // Esta mensagem será retornada para o seu front-end em caso de falha.
       return {
         statusCode: resposta.status,
-        body: JSON.stringify({ message: 'Erro ao buscar dados da API de futebol' }),
+        body: JSON.stringify({ 
+            message: 'Erro ao buscar dados da API de futebol. Verifique a chave e o HOST.' 
+        }),
       };
     }
     
     const dados = await resposta.json();
 
-    // Retorna os dados da API de futebol para o front-end
+    // 2. RETORNA OS DADOS PARA O FRONT-END (script.js)
     return {
       statusCode: 200,
       headers: {
-        // Isso é importante para permitir que o GitHub Pages acesse a função
+        // Isso permite que o seu GitHub Pages acesse esta função
         'Access-Control-Allow-Origin': '*', 
       },
       body: JSON.stringify(dados),
@@ -37,7 +50,7 @@ exports.handler = async (event, context) => {
     console.error('Erro na função Netlify:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ message: 'Erro interno no servidor', error: error.message }),
+      body: JSON.stringify({ message: 'Erro interno no servidor' }),
     };
   }
 };
