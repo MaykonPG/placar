@@ -2,7 +2,7 @@
 
 // O Netlify expõe variáveis de ambiente (como a API key) via process.env
 const API_KEY = process.env.API_KEY_FUTEBOL; 
-const API_URL = "SUA_URL_DA_API_DE_PLACAR"; // Ex: https://api.exemplo.com/v1/scores?league=brasileirao
+const API_URL = 'https://free-api-live-football-data.p.rapidapi.com/football-players-search?search=m'; // Ex: https://api.exemplo.com/v1/scores?league=brasileirao
 
 // A função 'handler' é o que o Netlify executa quando a URL da função é acessada
 exports.handler = async (event, context) => {
