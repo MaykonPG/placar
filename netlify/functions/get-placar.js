@@ -8,7 +8,7 @@ const API_KEY = process.env.API_KEY_FUTEBOL;
 const RAPIDAPI_HOST = 'free-football-api-data.p.rapidapi.com'; 
 
 // URL pura da API que retorna a lista de jogadores (ajuste se for o endpoint de placar)
-const API_URL = 'https://free-football-api-data.p.rapidapi.com/football-event-statistics?eventid=12650707'; 
+const API_URL = 'https://free-football-api-data.p.rapidapi.com/football-categories-live-unique-tournaments?countryid=13'; 
 
 // A função 'handler' é o que o Netlify executa
 exports.handler = async (event, context) => {
