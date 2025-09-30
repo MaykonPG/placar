@@ -5,7 +5,7 @@ const API_KEY = process.env.API_KEY_FUTEBOL;
 
 // O Host da RapidAPI é essencial para a autenticação.
 // (Este host é extraído do URL que você forneceu)
-const RAPIDAPI_HOST = 'free-api-live-football-data.p.rapidapi.com'; 
+const RAPIDAPI_HOST = 'free-livescore-api.p.rapidapi.com'; 
 
 // URL pura da API que retorna a lista de jogadores (ajuste se for o endpoint de placar)
 const API_URL = 'https://free-api-live-football-data.p.rapidapi.com/football-players-search?search=m'; 
