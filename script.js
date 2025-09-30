@@ -1,40 +1,44 @@
-// Função para buscar e atualizar os dados
-function atualizarPlacar() {
-    // ----------------------------------------------------------------------
-    // ESTA PARTE ABAIXO SIMULA OS DADOS QUE VIRIAM DE UMA API REAL
-    // ----------------------------------------------------------------------
-    const dadosSimulados = {
-        timeCasa: "FLAMENGO",
-        golsCasa: Math.floor(Math.random() * 4), // Gols aleatórios de 0 a 3
-        timeVisitante: "SÃO PAULO",
-        golsVisitante: Math.floor(Math.random() * 4),
-        tempoJogo: ["25:30", "INTERVALO", "80:45", "FIM DE JOGO"][Math.floor(Math.random() * 4)]
-    };
-    // ----------------------------------------------------------------------
+// Arquivo: script.js (no seu repositório do GitHub)
 
-    // Pega os elementos do HTML
-    const nomeCasaEl = document.querySelector('#time-casa .nome-time');
-    const golsCasaEl = document.getElementById('gols-casa');
-    const nomeVisitanteEl = document.querySelector('#time-visitante .nome-time');
-    const golsVisitanteEl = document.getElementById('gols-visitante');
-    const tempoJogoEl = document.getElementById('tempo-jogo');
+// URL da sua Netlify Function! O Netlify criará esse caminho automaticamente
+const FUNCTION_URL = 'https://fastidious-biscuit-7b422a.netlify.app/.netlify/functions/get-placar';
+
+async function atualizarPlacar() {
     const atualizacaoEl = document.getElementById('ultima-atualizacao');
+    
+    try {
+        // 1. CHAMA A FUNÇÃO NETLIFY (que já tem a chave protegida)
+        const resposta = await fetch(FUNCTION_URL);
+        const dados = await resposta.json();
 
-    // Atualiza o HTML com os dados
-    nomeCasaEl.textContent = dadosSimulados.timeCasa;
-    golsCasaEl.textContent = dadosSimulados.golsCasa;
-    nomeVisitanteEl.textContent = dadosSimulados.timeVisitante;
-    golsVisitanteEl.textContent = dadosSimulados.golsVisitante;
-    tempoJogoEl.textContent = dadosSimulados.tempoJogo;
+        // **ATENÇÃO:** // A partir daqui, você precisa saber a estrutura JSON dos DADOS que sua API retorna.
+        
+        // Exemplo: Se sua API retorna um array de jogos, e você quer o primeiro:
+        const jogoAtual = dados.matches[0]; 
+        
+        if (!jogoAtual) {
+            document.getElementById('tempo-jogo').textContent = "SEM JOGOS ATIVOS";
+            return; 
+        }
 
-    // Atualiza o horário da última atualização
-    const agora = new Date();
-    atualizacaoEl.textContent = `Última atualização: ${agora.toLocaleTimeString('pt-BR')}`;
+        // 2. ATUALIZA O HTML (Ajuste esses campos conforme a estrutura real da sua API)
+        document.querySelector('#time-casa .nome-time').textContent = jogoAtual.home_team.name;
+        document.getElementById('gols-casa').textContent = jogoAtual.score.home;
+        document.querySelector('#time-visitante .nome-time').textContent = jogoAtual.away_team.name;
+        document.getElementById('gols-visitante').textContent = jogoAtual.score.away;
+        document.getElementById('tempo-jogo').textContent = jogoAtual.status; 
+        
+        // Atualiza o horário
+        const agora = new Date();
+        atualizacaoEl.textContent = `Última atualização: ${agora.toLocaleTimeString('pt-BR')}`;
+
+    } catch (error) {
+        console.error("Erro ao carregar placar:", error);
+        document.getElementById('tempo-jogo').textContent = "ERRO NA CONEXÃO";
+        atualizacaoEl.textContent = "Verifique o servidor Netlify.";
+    }
 }
 
-// 1. Executa a função imediatamente ao carregar
+// Roda a atualização periodicamente (30 segundos)
+setInterval(atualizarPlacar, 30000); 
 atualizarPlacar();
-
-// 2. Define um loop para rodar a função a cada 10 segundos (10000 milissegundos)
-// Isso simula a checagem na API
-setInterval(atualizarPlacar, 10000);
